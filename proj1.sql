@@ -100,7 +100,18 @@ AS
 -- Question 3i
 CREATE VIEW q3i(playerid, namefirst, namelast, yearid, slg)
 AS
-  SELECT 1, 1, 1, 1, 1 -- replace this line
+  SELECT p.playerID, p.nameFirst, p.nameLast, b.yearID, CAST((H + H2B + 2 * H3B + 3 * HR) AS float) / CAST(AB AS float) as slg
+  FROM people AS p
+  INNER JOIN batting AS b
+  ON p.playerID = b.playerID
+  WHERE AB > 50 AND slg IN (
+    SELECT DISTINCT CAST((H + H2B + 2 * H3B + 3 * HR) AS float) / CAST(AB AS float) as max_slg
+    FROM batting
+    WHERE AB > 50
+    ORDER BY max_slg DESC
+    LIMIT 10
+  )
+  ORDER BY slg DESC, b.yearID ASC, p.playerID ASC
 ;
 
 -- Question 3ii
