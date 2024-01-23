@@ -215,6 +215,11 @@ AS
 ;
 -- Question 4v
 CREATE VIEW q4v(team, diffAvg) AS
-  SELECT 1, 1 -- replace this line
+  SELECT a.teamid, MAX(salary) - MIN(salary) as diffAvg
+  FROM salaries AS s 
+  INNER JOIN allstarfull as a
+  ON s.playerid = a.playerid and s.yearid = a.yearid
+  WHERE s.yearid = 2016
+  GROUP by a.teamid
 ;
 
