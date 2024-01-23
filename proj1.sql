@@ -155,7 +155,9 @@ AS
 -- Question 4i
 CREATE VIEW q4i(yearid, min, max, avg)
 AS
-  SELECT 1, 1, 1, 1 -- replace this line
+  SELECT yearID, MIN(salary), MAX(salary), AVG(salary)
+  FROM salaries
+  GROUP BY yearID
 ;
 
 -- Question 4ii
