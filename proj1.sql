@@ -136,7 +136,20 @@ AS
 -- Question 3iii
 CREATE VIEW q3iii(namefirst, namelast, lslg)
 AS
-  SELECT 1, 1, 1 -- replace this line
+  SELECT p.nameFirst, p.nameLast, CAST(SUM((H + H2B + 2 * H3B + 3 * HR)) AS float) / CAST(SUM(AB) AS float) as lslg
+  FROM people AS p
+  INNER JOIN batting AS b
+  ON p.playerID = b.playerID
+  WHERE nameFirst <> 'Willie' and nameLast <> 'Mays'
+  GROUP BY p.playerID, p.nameFirst, p.nameLast 
+  HAVING SUM(AB) > 50 AND lslg > (
+    SELECT CAST(SUM((H + H2B + 2 * H3B + 3 * HR)) AS float) / CAST(SUM(AB) AS float) lslg
+    FROM people AS p
+    INNER JOIN batting AS b
+    ON p.playerID = b.playerID
+    WHERE nameFirst = 'Willie' and nameLast = 'Mays'
+  )
+  ORDER BY lslg DESC, p.playerID ASC
 ;
 
 -- Question 4i
