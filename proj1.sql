@@ -163,7 +163,19 @@ AS
 -- Question 4ii
 CREATE VIEW q4ii(binid, low, high, count)
 AS
-  SELECT 1, 1, 1, 1 -- replace this line
+  WITH X AS (SELECT MIN(salary) as min, MAX(salary) as max
+             FROM salaries WHERE yearid = '2016'
+  ), Y AS (SELECT binid, 
+                  binid*(X.max-X.min)/10.0 + X.min AS low,
+                  (binid+1)*(X.max-X.min)/10.0 + X.min AS high
+           FROM binids, X)
+  SELECT binid, low, high, COUNT(*) 
+  FROM Y INNER JOIN salaries AS s 
+         ON s.salary >= Y.low 
+            AND (s.salary < Y.high OR binid = 9 AND s.salary <= Y.high)
+            AND yearid = '2016'
+  GROUP BY binid, low, high
+  ORDER BY binid ASC
 ;
 
 -- Question 4iii
