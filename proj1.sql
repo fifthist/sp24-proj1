@@ -181,7 +181,18 @@ AS
 -- Question 4iii
 CREATE VIEW q4iii(yearid, mindiff, maxdiff, avgdiff)
 AS
-  SELECT 1, 1, 1, 1 -- replace this line
+  WITH X AS (
+    SELECT yearid, MIN(salary) as min, MAX(salary) as max, AVG(salary) as avg
+    FROM salaries
+    GROUP BY yearid)
+
+  SELECT x1.yearid, 
+         x1.min - x2.min AS mindiff, 
+	 x1.max - x2.max AS maxdiff, 
+	 x1.avg - x2.avg as avgdiff
+  FROM X x1 INNER JOIN X x2
+  ON x2.yearid = x1.yearid - 1
+  ORDER BY x1.yearid ASC
 ;
 
 -- Question 4iv
