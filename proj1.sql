@@ -198,7 +198,20 @@ AS
 -- Question 4iv
 CREATE VIEW q4iv(playerid, namefirst, namelast, salary, yearid)
 AS
-  SELECT 1, 1, 1, 1, 1 -- replace this line
+  WITH max_salaries AS (
+    SELECT yearid, MAX(salary) as max
+    FROM salaries
+    WHERE yearid = 2000 or yearid = 2001
+    GROUP BY yearid
+  )
+
+  SELECT people.playerID, nameFirst, nameLast, salary, salaries.yearid
+  FROM people
+  INNER JOIN salaries
+  on people.playerID = salaries.playerID
+  INNER JOIN max_salaries 
+  ON salaries.yearID = max_salaries.yearid
+  AND salary = max_salaries.max 
 ;
 -- Question 4v
 CREATE VIEW q4v(team, diffAvg) AS
